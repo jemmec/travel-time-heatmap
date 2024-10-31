@@ -1,2 +1,0 @@
-//Generates the heatmap datapoints
-
