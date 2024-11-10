@@ -10,6 +10,7 @@
     "generate-map": "node ./generate-distance-map.js"
   },
   "dependencies": {
+    "@vis.gl/react-google-maps": "^1.4.0",
     "dotenv": "^16.4.5",
     "next": "^14.2.16",
     "react": "^18",

@@ -6,7 +6,7 @@ const EARTH_RAD = 6378137;
 
 // Point generation
 const destination = [-34.92864428718256, 138.6000002200029];
-const density = 500;
+const density = 250;
 const radius = 1_000;
 
 // Travel settings
@@ -21,6 +21,12 @@ function escapeCoord(coordinate) {
   return encodeURIComponent(coordinate.join(","));
 }
 
+function calculateZoomLevel(radius, buffer) {
+  const adjustedRadius = radius * (1 + buffer / 100);
+  const zoom = Math.log2((2 * Math.PI * EARTH_RAD) / (256 * adjustedRadius));
+  return Math.floor(zoom);
+}
+
 /**
  *
  * @param {*} destination
@@ -32,7 +38,9 @@ async function fetchDistanceInfo(destination, origin) {
     destination
   )}&origins=${escapeCoord(
     origin
-  )}&arrival_time=${arrivalTime}&units=metric&key=${process.env.API_KEY}`;
+  )}&arrival_time=${arrivalTime}&units=metric&key=${
+    process.env.NEXT_PUBLIC_API_KEY
+  }`;
   const res = await fetch(url, { method: "GET" });
   if (!res.ok) {
     return null;
@@ -115,7 +123,20 @@ function writeFile(distances) {
   while (fs.existsSync(unique)) {
     unique = `${filePath}_${count++}.json`;
   }
-  fs.writeFileSync(unique, JSON.stringify(distances, null, 2), "utf-8");
+
+  let jsonObj = {
+    meta: {
+      destination,
+      density,
+      radius,
+      arrivalTime,
+      zoom: calculateZoomLevel(radius, 20),
+      count: distances.length,
+    },
+    distances,
+  };
+
+  fs.writeFileSync(unique, JSON.stringify(jsonObj, null, 2), "utf-8");
 }
 
 (async () => {
