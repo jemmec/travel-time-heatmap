@@ -1,6 +1,11 @@
+
+<p align="center">
+  <img src="image.png" />
+</p>
+
 # Travel Time Heatmap
 
-Create's a heatmap visualisation of the travel-times to a specific destination.
+Create's a heatmap visualisation of the travel-times to a specific destination at a specific time.
 
 ## Design notes
 

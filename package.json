@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate-map": "node ./generate-distance-map.js"
+    "generate": "node ./generate-distance-map.js"
   },
   "dependencies": {
     "@vis.gl/react-google-maps": "^1.4.0",

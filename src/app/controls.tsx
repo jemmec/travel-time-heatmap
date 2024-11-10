@@ -44,7 +44,7 @@ export const Controls = React.memo(function Controls(): React.ReactNode {
 
       <div className="flex justify-between gap-4">
         <label className="text-white" htmlFor="useZoomForRadius">
-          Get Radius from Zoom
+          Fixed Radius
         </label>
         <input
           id="useZoomForRadius"

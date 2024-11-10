@@ -21,7 +21,7 @@ const initialState: AppState = {
   heatmapType: "duration",
   useZoomForRadius: true,
   radius: 25,
-  opacity: 0.8,
+  opacity: 0.5,
 };
 
 function appReducer(state: AppState, action: Action): AppState {

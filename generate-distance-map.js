@@ -5,11 +5,12 @@ require("dotenv").config();
 const { setTimeout } = require("timers/promises");
 
 const EARTH_RAD = 6378137;
+const REQUEST_DELAY = 10;
 
-// Point generation
-const destination = [-34.92864428718256, 138.6000002200029];
-const density = 1000;
-const radius = 10000;
+// Point generation settings
+const destination = [38.897452123363, -77.03663981618253];
+const density = 2500;
+const radius = 50000;
 
 // Travel settings
 const arrivalTime = Date.UTC(2024, 3, 3, 9, 0, 0) / 1000;
@@ -98,7 +99,7 @@ async function calculateDistances(points) {
   const ret = [];
   for (let i = 0; i < points.length; i++) {
     console.log(`Processing point distance (${i}/${points.length})!`);
-    await setTimeout(50);
+    await setTimeout(REQUEST_DELAY);
     const res = await fetchDistanceInfo(destination, points[i]);
     if (res === null) {
       continue;
