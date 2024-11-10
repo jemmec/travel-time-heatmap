@@ -2,12 +2,14 @@ const fs = require("fs");
 const path = require("path");
 require("dotenv").config();
 
+const { setTimeout } = require("timers/promises");
+
 const EARTH_RAD = 6378137;
 
 // Point generation
 const destination = [-34.92864428718256, 138.6000002200029];
-const density = 250;
-const radius = 1_000;
+const density = 1000;
+const radius = 10000;
 
 // Travel settings
 const arrivalTime = Date.UTC(2024, 3, 3, 9, 0, 0) / 1000;
@@ -19,12 +21,6 @@ const arrivalTime = Date.UTC(2024, 3, 3, 9, 0, 0) / 1000;
  */
 function escapeCoord(coordinate) {
   return encodeURIComponent(coordinate.join(","));
-}
-
-function calculateZoomLevel(radius, buffer) {
-  const adjustedRadius = radius * (1 + buffer / 100);
-  const zoom = Math.log2((2 * Math.PI * EARTH_RAD) / (256 * adjustedRadius));
-  return Math.floor(zoom);
 }
 
 /**
@@ -79,13 +75,15 @@ function offsetCoordinateByMeters(original, latOffset, lonOffset) {
 function generatePoints() {
   const ret = [];
   let lat = radius / 2;
-  let lon = lat;
+  let lon = radius / 2;
   const count = radius / density;
   for (let x = 0; x < count; x++) {
     for (let y = 0; y < count; y++) {
       ret.push(offsetCoordinateByMeters(destination, lat, lon));
       lon -= density;
     }
+    // reset longitude
+    lon = radius / 2;
     lat -= density;
   }
   return ret;
@@ -99,6 +97,8 @@ function generatePoints() {
 async function calculateDistances(points) {
   const ret = [];
   for (let i = 0; i < points.length; i++) {
+    console.log(`Processing point distance (${i}/${points.length})!`);
+    await setTimeout(50);
     const res = await fetchDistanceInfo(destination, points[i]);
     if (res === null) {
       continue;
@@ -109,6 +109,7 @@ async function calculateDistances(points) {
       ...res,
     });
   }
+  console.log(`Processing complete!!`);
   return ret;
 }
 
@@ -130,7 +131,6 @@ function writeFile(distances) {
       density,
       radius,
       arrivalTime,
-      zoom: calculateZoomLevel(radius, 20),
       count: distances.length,
     },
     distances,
