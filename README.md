@@ -7,6 +7,18 @@
 
 Create's a heatmap visualisation of the travel-times to a specific destination at a specific time.
 
+## Setup
+
+Create a `.env` file in root and add:
+
+```js
+NEXT_PUBLIC_API_KEY="YOUR GOOGLE MAPS ENABLED API KEY"
+```
+
+Run `npm run generate` to run the data generation script.
+
+Run `npm run dev` to start the app, load the generated data file into the app.
+
 ## Design notes
 
 ### Heatmap generator
