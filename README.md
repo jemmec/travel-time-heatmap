@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="image.png" />
+  <img src="splash.png" />
 </p>
 
 # Travel Time Heatmap
