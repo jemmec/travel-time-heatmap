@@ -68,7 +68,8 @@ export const Controls = React.memo(function Controls(): React.ReactNode {
           id="radius"
           type="range"
           min={5}
-          max={100}
+          max={200}
+          step={1}
           value={app.state.radius}
           onChange={(e) =>
             app.dispatch({
@@ -77,6 +78,7 @@ export const Controls = React.memo(function Controls(): React.ReactNode {
             })
           }
         />
+        <span className="text-white">{app.state.radius}</span>
       </div>
 
       <div className="flex justify-between gap-4">
@@ -97,6 +99,7 @@ export const Controls = React.memo(function Controls(): React.ReactNode {
             })
           }
         />
+        <span className="text-white">{app.state.opacity.toFixed(1)}</span>
       </div>
     </div>
   );

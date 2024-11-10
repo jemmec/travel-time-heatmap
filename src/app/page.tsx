@@ -9,7 +9,6 @@ import {
 import React from "react";
 import { Controls } from "./controls";
 import { AppProvider, useApp } from "./context";
-import { appendFileSync } from "fs";
 
 type Coordinates = [number, number];
 
@@ -79,6 +78,16 @@ function calculateZoomLevel(radius: number, buffer: number): number {
   return Math.floor(zoom);
 }
 
+function calculateRadius(density: number, zoom: number): number {
+  const referenceDensity = 1000;
+  const referenceZoom = 14;
+  const referenceRadius = 200;
+  const densityRatio = density / referenceDensity;
+  const zoomDifference = referenceZoom - zoom;
+  const radius = referenceRadius * densityRatio * Math.pow(0.5, zoomDifference);
+  return radius;
+}
+
 export default function Index() {
   const apiKey: string | undefined = process.env.NEXT_PUBLIC_API_KEY;
 
@@ -105,12 +114,12 @@ const View = React.memo(function View() {
   const [zoom, setZoom] = React.useState<number>(DEFAULT_ZOOM);
 
   const radius = React.useMemo(() => {
-    if (!app.state.useZoomForRadius) {
+    if (!data || !app.state.useZoomForRadius) {
       return app.state.radius;
     }
-
-    return 25 + zoom;
-  }, [app.state.useZoomForRadius, zoom]);
+    // Limit the radius here as anything > 200 seems to kill performance...
+    return Math.min(calculateRadius(data.meta.density, zoom), 200);
+  }, [app.state.useZoomForRadius, app.state.radius, zoom]);
 
   /**
    * Side-effect for inital setup of the map when new data is loaded
